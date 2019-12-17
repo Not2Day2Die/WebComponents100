@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>CountDownElement - WebComponents100 </title>
+  <meta name="description" content="CountDownElement - WebComponents100">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link rel="stylesheet" href="/css/index.css"> -->
+  <script src="/js/index.js"></script>
+</head>
+
+<body>
+  <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+  <countdown-seconds seconds=60></countdown-seconds>
+
+  <template id="countdownsecondsTemplate">
+    <style>
+      .container {
+        box-sizing: border-box;
+        padding: 0px;
+        display: inline-block;
+        background-color:#eee;
+        border: 1px solid;
+      }
+      .container h1 {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 36px;;
+        color: #000;
+        margin: 0;
+        padding: 0px 5px;
+      }
+      .container .seconds {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 36px;
+        color: crimson;
+        margin: 0;
+        padding: 0px;
+      }
+    </style>
+    <div class="container">
+      <h1><span class="seconds"></span> seconds left.</h1>
+    </div>
+  </template>
+
+  <script type="text/javascript">
+    class CountdownSeconds extends HTMLElement {
+      constructor() {
+        super();
+        var shadow = this.attachShadow({
+          mode: 'open'
+        });
+        var templateElem = document.getElementById('countdownsecondsTemplate');
+        var content = templateElem.content.cloneNode(true);
+        content.querySelector('.seconds').innerText = this.getAttribute('seconds');
+        shadow.appendChild(content);
+      }
+      connectedCallback() {
+        //console.log('Custom square element added to page.');
+        var refreshIntervalId = setInterval(() => {
+          var shadow = this.shadowRoot;
+          this.setAttribute('seconds', this.getAttribute('seconds') - 1);
+          console.log(this.getAttribute('seconds'));
+          shadow.querySelector('.seconds').innerText = this.getAttribute('seconds');
+          if(this.getAttribute('seconds')==0)
+          {
+            clearInterval(refreshIntervalId);
+          }
+
+        }, 1000);
+      }
+    }
+    window.customElements.define('countdown-seconds', CountdownSeconds);
+
+  </script>
+
+
+
+</body>
+
+</html>
